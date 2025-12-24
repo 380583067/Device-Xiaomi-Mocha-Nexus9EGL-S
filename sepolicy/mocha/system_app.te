@@ -1,0 +1,4 @@
+# 修复system_app的RenderThread访问host1x capabilities文件（tegra图形核心）
+allow system_app sysfs_device_platform:file { read open getattr };
+# 兜底：tegra平台host1x属于sysfs_device_platform，补充路径访问
+allow system_app sysfs_device_platform:dir { search open getattr };

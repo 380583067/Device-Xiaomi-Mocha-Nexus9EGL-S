@@ -1,0 +1,5 @@
+# 允许健康HAL访问sysfs_device_platform类型的电池present文件（read/open）
+allow hal_health_default sysfs_device_platform:file { read open getattr };
+
+# 补充电源管理sysfs的精准权限（更贴合tegra平台电池路径）
+allow hal_health_default sysfs_power_supply:file { read open getattr };

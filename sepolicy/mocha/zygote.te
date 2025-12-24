@@ -1,0 +1,6 @@
+# 修复zygote访问cgroup.procs的create/open权限（tegra平台cgroup适配）
+allow zygote zygote_tmpfs:file { create open write getattr };
+allow zygote cgroup:dir { search open read getattr };
+# 补充cgroup uid/pid子目录的访问权限
+allow zygote cgroup:file { create open write read getattr };
+

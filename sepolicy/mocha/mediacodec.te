@@ -1,0 +1,5 @@
+# 允许mediacodec域访问default_prop类型的属性文件（解决read/open/getattr拒绝）
+allow mediacodec default_prop:file { read open getattr };
+
+# 补充属性文件所在目录的访问权限（兜底，避免路径访问失败）
+allow mediacodec property_socket:dir { search open getattr };
