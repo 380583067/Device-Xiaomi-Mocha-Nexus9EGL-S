@@ -217,7 +217,8 @@ PRODUCT_COPY_FILES += \
 
 # Memtrack
 PRODUCT_PACKAGES += \
-    android.hardware.memtrack@1.0-service-nvidia
+	android.hardware.memtrack@1.0-impl \
+    android.hardware.memtrack@1.0-service
 
 # NVIDIA
 PRODUCT_COPY_FILES += \
@@ -287,7 +288,7 @@ PRODUCT_PACKAGES += \
 # Power
 PRODUCT_PACKAGES += \
     android.hardware.power@1.0-service.mocha \
-    vendor.lineage.power@1.0
+    android.hardware.power.stats@1.0-service.mock
 
 PRODUCT_COPY_FILES += \
     system/core/libprocessgroup/profiles/cgroups_28.json:$(TARGET_COPY_OUT_VENDOR)/etc/cgroups.json \
