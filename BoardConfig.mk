@@ -173,10 +173,7 @@ OVERRIDE_RS_DRIVER := libnvRSDriver.so
 BOARD_OVERRIDE_RS_CPU_VARIANT_32 := cortex-a15
 
 # SELinux Common tegra policy
-SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += device/xiaomi/mocha/sepolicy/common/private
-SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS += device/xiaomi/mocha/sepolicy/common/public
-BOARD_VENDOR_SEPOLICY_DIRS   += device/xiaomi/mocha/sepolicy/vendor
-LINEAGE_VENDOR_SEPOLICY_DIRS += device/xiaomi/mocha/sepolicy/lineage/vendor
+include device/nvidia/sepolicy/sepolicy.mk
 SELINUX_IGNORE_NEVERALLOWS := true
 BOARD_SEPOLICY_DIRS += device/xiaomi/mocha/sepolicy/mocha
 
