@@ -109,6 +109,10 @@ TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
 # Include an expanded selection of fonts
 EXTENDED_FONT_FOOTPRINT := true
 
+# Init
+TARGET_INIT_VENDOR_LIB := libinit_mocha
+TARGET_RECOVERY_DEVICE_MODULES := libinit_mocha
+
 # Kernel
 BOARD_KERNEL_CMDLINE := vpr_resize androidboot.selinux=permissive vmalloc=400M
 BOARD_KERNEL_BASE := 0x10000000
