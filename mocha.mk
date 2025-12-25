@@ -175,6 +175,9 @@ PRODUCT_PACKAGES += \
     android.hidl.manager@1.0 \
     android.hidl.manager@1.0_system
 
+# Iptables
+PRODUCT_PACKAGES += iptables-legacy ip6tables-legacy
+
 # Binder
 PRODUCT_PACKAGES += \
     libhidltransport \
