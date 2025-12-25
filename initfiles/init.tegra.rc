@@ -144,6 +144,7 @@ on boot
 
     # CMU
     chown system system /sys/devices/platform/host1x/tegradc.0/cmu_enable
+    chown system system /sys/devices/platform/host1x/tegradc.1/cmu_enable
 
     # power
     chown system system /sys/kernel/tegra_cap/core_cap_level
