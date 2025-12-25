@@ -382,3 +382,9 @@ PRODUCT_PACKAGES += \
     conn_init \
     wpa_supplicant \
     wpa_supplicant.conf
+
+# webview to mocha
+PRODUCT_USES_LIBRARIES += androidx.window.extensions
+PRODUCT_OPTIONAL_USES_LIBRARIES += androidx.window.extensions
+PRODUCT_PACKAGES += androidx.window.extensions
+PRODUCT_BROKEN_VERIFY_USES_LIBRARIES := true
