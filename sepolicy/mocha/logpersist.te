@@ -1,0 +1,3 @@
+# logpersist.te - 修复日志进程访问cache的权限
+allow logpersist cache_file:dir { open read };
+allow logpersist cache_file:file { create append open ioctl getattr };

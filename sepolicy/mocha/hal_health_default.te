@@ -3,3 +3,6 @@ allow hal_health_default sysfs_device_platform:file { read open getattr };
 
 # 补充电源管理sysfs的精准权限（更贴合tegra平台电池路径）
 allow hal_health_default sysfs_power_supply:file { read open getattr };
+
+# 允许健康HAL读取sysfs中充电相关文件
+allow hal_health_default sysfs_device_platform:file { read open getattr };

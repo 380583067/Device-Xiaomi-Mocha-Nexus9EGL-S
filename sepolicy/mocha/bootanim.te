@@ -1,0 +1,5 @@
+# 允许BootAnimation读取SOC信息
+allow bootanim sysfs_soc:file { read open getattr };
+
+# 允许BootAnimation读取GPU ptimer配置
+allow bootanim sysfs_device_platform:file { read open getattr };

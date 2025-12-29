@@ -1,0 +1,6 @@
+# 允许HWComposer HAL操作vndbinder设备的ioctl指令
+allow hal_graphics_composer_default vndbinder_device:chr_file ioctl;
+
+# 允许HWComposer HAL读取系统属性文件（default_prop/system_prop）
+allow hal_graphics_composer_default default_prop:file { read open getattr };
+allow hal_graphics_composer_default system_prop:file { read open getattr };

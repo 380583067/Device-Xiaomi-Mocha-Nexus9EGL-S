@@ -1,0 +1,11 @@
+# 方案1：通用规则（简单直接，适配Tegra平台）
+allow hal_health_default sysfs_device_platform:file { read open getattr };
+
+# 方案2：精准规则（推荐，最小权限原则）
+# 1. 先定义专属类型（在hal_health.te开头）
+type sysfs_power_supply, fs_type, sysfs_type;
+# 2. 添加权限规则
+allow hal_health_default sysfs_power_supply:file { read open getattr };
+# 3. 同步修改file_contexts（添加精准标签）
+# /device/nvidia/tn8/selinux/file_contexts
+/sys/devices/platform/psy_extcon\.[0-9]+/power_supply/.*  u:object_r:sysfs_power_supply:s0

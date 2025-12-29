@@ -1,0 +1,8 @@
+allow vendor_init tmpfs:dir { write add_name create };
+allow vendor_init cache_file:dir { write remove_name unlink };
+allow vendor_init cache_file:file { unlink };
+
+# apexd
+allow vendor_init property_type:property_file read;
+allow vendor_init apex_status_prop:property_service find;
+

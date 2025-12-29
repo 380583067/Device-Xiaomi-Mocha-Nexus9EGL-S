@@ -1,0 +1,13 @@
+# 允许init进程调用hwservicemanager的binder通信
+allow init hwservicemanager:binder { call transfer };
+# 允许init进程注册灯光HAL服务
+allow init hal_light_hwservice:hwservice_manager add;
+
+# init.te - 修复init进程访问sysfs/gpio/低内存杀手的权限
+allow init sysfs_device_platform:file setattr;
+allow init sysfs_gpio:file { open write };
+allow init sysfs_lowmemorykiller:file { open write };
+allow init socket_device:sock_file { create setattr };
+
+# 允许init进程在硬件服务管理器中查找DRM HAL服务
+allow init hal_drm_hwservice:hwservice_manager find;

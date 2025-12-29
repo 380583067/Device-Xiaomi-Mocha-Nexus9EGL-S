@@ -1,0 +1,7 @@
+# 允许音频HAL读取GPIO（LDO_EN/HP_DET）
+allow hal_audio sysfs_gpio:file { read open getattr };
+# 允许音频HAL访问regulator（供电）
+allow hal_audio regulator_device:dir { search };
+allow hal_audio regulator_device:file { read open getattr };
+# 允许音频HAL与TFA9890放大器通信（I2C）
+allow hal_audio i2c_device:dev_file { read write open ioctl };

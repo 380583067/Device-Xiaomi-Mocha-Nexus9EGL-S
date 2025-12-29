@@ -1,0 +1,9 @@
+# 允许访问vndbinder设备（包含新增的ioctl权限）
+allow hal_graphics_composer_default vndbinder_device:chr_file { read write open ioctl };
+# 允许访问系统属性文件
+allow hal_graphics_composer_default default_prop:file { read open getattr };
+allow hal_graphics_composer_default system_prop:file { read open getattr };
+# 新增：允许访问Tegra显示控制器设备
+allow hal_graphics_composer_default tegradc_device:chr_file { read write open ioctl };
+# 新增：允许读取sysfs中显示能力相关文件
+allow hal_graphics_composer_default sysfs_device_platform:file { read open getattr };

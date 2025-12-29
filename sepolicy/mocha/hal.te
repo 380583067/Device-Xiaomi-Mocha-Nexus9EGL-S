@@ -1,0 +1,2 @@
+# hal.te - 修复init执行vendor HAL服务的权限
+allow init vendor_file:file execute_no_trans;
