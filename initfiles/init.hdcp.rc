@@ -12,4 +12,3 @@ on post-fs-data
     setprop vendor.hdcp.srm.hdcp1x.name     "hdcp1x.srm"
     setprop vendor.hdcp.srm.hdcp2x.name     "hdcp2x.srm"
     setprop vendor.hdcp.srm.hdcp2xtest.name "hdcp2xtest.srm"
-

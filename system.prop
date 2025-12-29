@@ -100,3 +100,6 @@ persist.debug.wfd.enable=1
 wifi.interface=wlan0
 ap.interface=wlan0
 persist.wlan.ti.calibrated=0
+
+# S Bringup
+persist.sys.binary_xml=false

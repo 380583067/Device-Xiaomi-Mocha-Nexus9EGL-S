@@ -26,7 +26,8 @@ on post-fs-data
     chmod 0644 /sys/devices/platform/host1x/tegradc.0/color_filter
     chmod 0644 /sys/devices/platform/host1x/tegradc.0/color_filter_rgb
 
-    # 配置LMK参数
+    mkdir /data/system 0700 system system encryption=Require
+
     write /sys/module/lowmemorykiller/parameters/minfree "1536,2048,4096,8192,16384,32768"
     write /sys/module/lowmemorykiller/parameters/adj "0,1,2,4,7,15"
 
