@@ -61,7 +61,7 @@ LOCAL_MODULE       := init.tn8.rc
 LOCAL_MODULE_CLASS := ETC
 LOCAL_SRC_FILES    := init.tn8.rc
 LOCAL_MODULE_TAGS  := optional
-LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)
+LOCAL_MODULE_PATH  := $(TARGET_OUT_VENDOR_ETC)/init/hw
 include $(BUILD_PREBUILT)
 
 include $(CLEAR_VARS)
@@ -89,16 +89,15 @@ LOCAL_MODULE_PATH  := $(TARGET_OUT_VENDOR_ETC)/init/hw
 include $(BUILD_PREBUILT)
 
 include $(CLEAR_VARS)
-LOCAL_MODULE       := power.tn8.rc
-LOCAL_MODULE_CLASS := ETC
-LOCAL_SRC_FILES    := power.tn8.rc
-LOCAL_MODULE_TAGS  := optional
-LOCAL_MODULE_PATH  := $(TARGET_OUT_VENDOR_ETC)/init/hw
+LOCAL_MODULE        := power.tn8.rc
+LOCAL_MODULE_CLASS  := ETC
+LOCAL_SRC_FILES     := power.tn8.rc
+LOCAL_VENDOR_MODULE := true
 include $(BUILD_PREBUILT)
 
 include $(CLEAR_VARS)
 LOCAL_MODULE       := ueventd.tn8.rc
-LOCAL_MODULE_STEM	:= ueventd.rc
+LOCAL_MODULE_STEM  := ueventd.rc
 LOCAL_MODULE_TAGS  := optional
 LOCAL_MODULE_CLASS := ETC
 LOCAL_SRC_FILES    := ueventd.tn8.rc
