@@ -2290,28 +2290,49 @@ static int do_parse(struct parse_state *state)
 
 static int open_config_file(struct parse_state *state, char *file)
 {
-    char name[80], cur_file[40];
+    char name[256], cur_file[128];
     char property[PROPERTY_VALUE_MAX];
+    FILE* fp = NULL;
 
     free((void *)state->cur_xml_file);
-
+    state->cur_xml_file = NULL;
+    state->file = NULL;
 
     if (file == NULL) {
         property_get("ro.product.device", property, "generic");
-        snprintf(name, sizeof(name), "/vendor/etc/audio.%s.xml", property);
+        snprintf(name, sizeof(name), "/system/vendor/etc/audio.%s.xml", property);
         snprintf(cur_file, sizeof(cur_file), "audio.%s.xml", property);
-        state->cur_xml_file = strdup(cur_file);
+        
+        fp = fopen(name, "r");
+        if (!fp) {
+            snprintf(name, sizeof(name), "/vendor/etc/audio.%s.xml", property);
+            fp = fopen(name, "r");
+        }
     } else {
-        snprintf(name, sizeof(name), "/vendor/etc/%s", file);
+        if (strcmp(file, "audio_policy_configuration.xml") == 0) {
+            snprintf(name, sizeof(name), "/system/vendor/etc/%s", file);
+            fp = fopen(name, "r");
+            if (!fp) {
+                snprintf(name, sizeof(name), "/vendor/etc/%s", file);
+                fp = fopen(name, "r");
+            }
+        } else {
+            snprintf(name, sizeof(name), "/vendor/etc/%s", file);
+            fp = fopen(name, "r");
+        }
         state->cur_xml_file = strdup(file);
     }
 
+    if (file == NULL && fp) {
+        state->cur_xml_file = strdup(cur_file);
+    }
+
     ALOGV("Reading configuration from %s\n", name);
-    state->file = fopen(name, "r");
-    if (state->file) {
+    if (fp) {
+        state->file = fp;
         return 0;
     } else {
-        ALOGE_IF(!state->file, "Failed to open config file %s", name);
+        ALOGE_IF(!fp, "Failed to open config file %s", name);
         return -ENOSYS;
     }
 }

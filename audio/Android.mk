@@ -34,10 +34,14 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_CFLAGS += -Werror -Wno-error=unused-parameter -Wno-unused-parameter
 
 LOCAL_C_INCLUDES += \
+	hardware/libhardware/include \
+	device/xiaomi/mocha/include \
 	external/tinycompress/include \
 	device/xiaomi/mocha/tinyalsa/include \
 	external/tinyhal/include \
 	external/expat/lib \
+	system/media/audio_utils/include \
+	system/media/audio/include \
 	$(call include-path-for, audio-utils)
 
 LOCAL_SRC_FILES := \
