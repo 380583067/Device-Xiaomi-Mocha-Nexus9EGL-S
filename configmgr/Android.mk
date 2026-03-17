@@ -20,21 +20,17 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := libaudiohalcm
-LOCAL_MODULE_PATH := $(TARGET_OUT_VENDOR_SHARED_LIBRARIES)
-LOCAL_VENDOR_MODULE := true
+LOCAL_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)
 LOCAL_MODULE_TAGS := optional
 
 LOCAL_CFLAGS += -Werror -Wno-error=unused-parameter -Wno-unused-parameter
 
 LOCAL_C_INCLUDES += \
-	hardware/libhardware/include \
-	frameworks/av/include \
 	external/tinycompress/include \
 	external/tinyhal/include \
 	device/xiaomi/mocha/tinyalsa/include \
 	external/expat/lib \
-	$(call include-path-for, audio-utils) \
-	system/media/audio/include
+	$(call include-path-for, audio-utils)
 
 LOCAL_SRC_FILES := \
 	audio_config.c
