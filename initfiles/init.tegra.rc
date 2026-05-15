@@ -9,7 +9,7 @@
 import /vendor/etc/init/hw/init.comms.rc
 
 # Thie yields each tegra wdt expiration to be at 30 secs and fourth expiration for reboot at 120 secs.
-service watchdogd /system/bin/watchdogd 10 110
+service watchdogd /system/bin/watchdogd 10 20
     class core
     user root
     group root system
@@ -44,8 +44,6 @@ on early-init
     mkdir /acct/uid 0755 root root encryption=Require
 
 on init
-	# nvgpu shims
-    export LD_PRELOAD "/system/${LIB}/libshim_zw.so"
 
     write /sys/fs/cgroup/memory/memory.move_charge_at_immigrate 1
     chown root system /sys/fs/cgroup/memory/tasks
@@ -64,7 +62,7 @@ on init
     mkdir /storage/sdcard1 0700 root sdcard_r
 
     # Mount and bind audio_policy_configuration.xml in /vendor
-    mount none /vendor/etc/audio/audio_policy_configuration.xml /vendor/etc/audio/audio_policy_configuration.xml bind
+    mount none /vendor/etc/audio_policy_configuration.xml /vendor/etc/audio/audio_policy_configuration.xml bind
 
     # Support legacy paths
     symlink /sdcard /mnt/sdcard
@@ -82,6 +80,15 @@ on fs
     mount pstore pstore /sys/fs/pstore
 
 on post-fs-data
+	# nvgpu shims
+    export LD_PRELOAD "/system/lib/libshim_zw.so"
+
+    # Audio_policy_configuration
+    chmod 0644 /vendor/etc/audio_policy_configuration.xml
+    chmod 0644 /vendor/etc/audio.mocha.xml
+    chown root root /vendor/etc/audio_policy_configuration.xml
+    chown root root /vendor/etc/audio.mocha.xml
+
     # We chown/chmod /mnt/usercalib again so because mount is run as root + defaults
     chown system system /usercalib
     chmod 0771 /usercalib
@@ -115,7 +122,10 @@ on post-fs-data
 import /vendor/etc/init/hw/init.hdcp.rc
 
 on boot
-    
+    chmod 0666 /dev/nvhost*
+    chmod 0666 /dev/tegra_dc_ctrl
+    chmod 0666 /dev/nvmap
+
 	# charger
     chown system system /sys/devices/platform/tegra12-i2c.0/i2c-1/1-006b/disabled_by_user
 
@@ -123,12 +133,6 @@ on boot
     chown system system /sys/devices/platform/tegra12-i2c.0/i2c-3/3-004a/wakeup_mode
     chown system system /sys/devices/platform/tegra12-i2c.0/i2c-3/3-0020/input/input0/wake_gesture
     chown system system /sys/devices/platform/tegra12-i2c.0/i2c-3/3-0020/input/input3/wake_gesture
-
-# didim
-    chown system system /sys/devices/platform/host1x/tegradc.0/smartdimmer/enable
-    chown system system /sys/devices/platform/host1x/tegradc.0/smartdimmer/aggressiveness
-    chown system system /sys/devices/platform/host1x/tegradc.0/smartdimmer/sd_window
-    chown system system /sys/devices/platform/host1x/tegradc.0/smartdimmer/sd_window_enable
 
 ## cmhw permissions
 # key disabler
@@ -141,7 +145,6 @@ on boot
 
 # CMU
     chown system system /sys/devices/platform/host1x/tegradc.0/cmu_enable
-    chown system system /sys/devices/platform/host1x/tegradc.1/cmu_enable
 
 # power
     chown system system /sys/kernel/tegra_cap/core_cap_level
@@ -194,12 +197,14 @@ on boot
 
 # Touch
     chown system system /sys/class/input/input0/enabled
+    chown system system /sys/class/input/input0/enable
+    chmod 0660 /sys/class/input/input0/enable
 
 # nvdps
     chown system system /sys/devices/platform/host1x/tegradc.0/nvdps
     chown system system /sys/class/graphics/fb0/device/nvdps
 
-#ozwpan driver: WiFi direct USB shim driver
+# ozwpan driver: WiFi direct USB shim driver
     chown system system /dev/ozwpan
     chown system system /sys/class/ozmo_wpan/ozwpan/devices
     chown system system /sys/class/ozmo_wpan/ozwpan/select
@@ -213,56 +218,8 @@ on boot
 # TLK storage service
 import /vendor/etc/init/hw/init.tlk.rc
 
-on property:ro.debuggable=1
-    # EMC debug interface
-    chmod 666 /sys/kernel/debug/tegra_emc/eack_state
-    # Invensense interface
-    chmod 0666 /sys/class/invensense/mpu/accl_bias
-    chmod 0666 /sys/class/invensense/mpu/accl_enable
-    chmod 0666 /sys/class/invensense/mpu/accl_fifo_enable
-    chmod 0666 /sys/class/invensense/mpu/accl_fs
-    chmod 0666 /sys/class/invensense/mpu/accl_matrix
-    chmod 0666 /sys/class/invensense/mpu/clock_source
-    chmod 0666 /sys/class/invensense/mpu/compass_enable
-    chmod 0666 /sys/class/invensense/mpu/compass_matrix
-    chmod 0666 /sys/class/invensense/mpu/compass_scale
-    chmod 0666 /sys/class/invensense/mpu/dev
-    chmod 0666 /sys/class/invensense/mpu/dmp_firmware
-    chmod 0666 /sys/class/invensense/mpu/enable
-    chmod 0666 /sys/class/invensense/mpu/fifo_rate
-    chmod 0666 /sys/class/invensense/mpu/firmware_loaded
-    chmod 0666 /sys/class/invensense/mpu/flick_axis
-    chmod 0666 /sys/class/invensense/mpu/flick_counter
-    chmod 0666 /sys/class/invensense/mpu/flick_int_on
-    chmod 0666 /sys/class/invensense/mpu/flick_lower
-    chmod 0666 /sys/class/invensense/mpu/flick_message_on
-    chmod 0666 /sys/class/invensense/mpu/flick_upper
-    chmod 0666 /sys/class/invensense/mpu/gyro_enable
-    chmod 0666 /sys/class/invensense/mpu/gyro_fifo_enable
-    chmod 0666 /sys/class/invensense/mpu/gyro_fs
-    chmod 0666 /sys/class/invensense/mpu/gyro_matrix
-    chmod 0666 /sys/class/invensense/mpu/key
-    chmod 0666 /sys/class/invensense/mpu/lpa_freq
-    chmod 0666 /sys/class/invensense/mpu/lpa_mode
-    chmod 0666 /sys/class/invensense/mpu/pedometer_steps
-    chmod 0666 /sys/class/invensense/mpu/pedometer_time
-    chmod 0666 /sys/class/invensense/mpu/power
-    chmod 0666 /sys/class/invensense/mpu/power_state
-    chmod 0666 /sys/class/invensense/mpu/raw_accl
-    chmod 0666 /sys/class/invensense/mpu/raw_gyro
-    chmod 0666 /sys/class/invensense/mpu/reg_dump
-    chmod 0666 /sys/class/invensense/mpu/self_test
-    chmod 0666 /sys/class/invensense/mpu/temp_offset
-    chmod 0666 /sys/class/invensense/mpu/temp_scale
-    chmod 0666 /sys/class/invensense/mpu/temperature
-    chmod 0666 /sys/class/invensense/mpu/uevent
-
-    # Invensense debug register interface.
-    chmod 0666 /sys/class/invensense/mpu/dbg_reg
-    chmod 0666 /sys/class/invensense/mpu/dbg_dat
-
 # bugreport is triggered by the VOLUME-DOWN and VOLUME-UP keys
-service bugreport /system/bin/dumpstate -d -p -B -o /data/data/com.android.shell/files/bugreports/bugreport
+service bugreport /system/bin/dumpstate -d -p -B -z -o /data/user_de/0/com.android.shell/files/bugreports/bugreport
     class main
     disabled
     oneshot

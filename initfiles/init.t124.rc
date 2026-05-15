@@ -57,13 +57,12 @@ on boot
     chown system system /sys/kernel/tegra_cpu_emc/table_src
     write /sys/kernel/tegra_cpu_emc/table_src 1
 
-  
 on late-fs
     write /sys/block/mmcblk0/queue/iostats 0
     write /sys/block/mmcblk0/queue/nr_requests 256
     write /sys/block/mmcblk0/queue/read_ahead_kb 2048
-    write /sys/block/mmcblk0/queue/scheduler row
-    write /sys/block/mmcblk1/queue/scheduler row
+    write /sys/block/mmcblk0/queue/scheduler deadline
+    write /sys/block/mmcblk1/queue/scheduler deadline
 
 on property:sys.boot_completed=1
     setprop sys.io.scheduler bfq 
@@ -117,12 +116,4 @@ service netd /system/bin/netd
     socket dnsproxyd stream 660 root inet
     socket mdns stream 660 root system
     socket fwmarkd stream 660 root inet
-
-# AUIDO
-service audio-hal /vendor/bin/hw/audio.primary.tegra
-    class hal
-    user audio
-    group audio camera media mediacodec drmrpc
-    ioprio rt 4
-    writepid /dev/cpuset/audioserver/tasks
 
