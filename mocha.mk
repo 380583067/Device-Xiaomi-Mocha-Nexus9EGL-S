@@ -20,7 +20,7 @@ $(call inherit-product-if-exists, vendor/xiaomi/mocha/mocha-vendor.mk)
 $(call inherit-product-if-exists, vendor/xiaomi/mocha/consolemode-blobs.mk)
 
 # API
-PRODUCT_PACKAGES += $(PRODUCT_PACKAGES_SHIPPING_API_LEVEL_30)
+PRODUCT_PACKAGES += $(PRODUCT_PACKAGES_SHIPPING_API_LEVEL_32)
 
 # Audio
 PRODUCT_COPY_FILES += \
@@ -99,10 +99,20 @@ PRODUCT_PACKAGES += \
     android.hardware.configstore@1.1-impl \
     android.hardware.configstore@1.1-service
 
+# ChargerTile
+PRODUCT_PACKAGES += \
+    charger \
+    charger_res_images
+
+# Charging LED
+PRODUCT_COPY_FILES += \
+    device/xiaomi/mocha/initfiles/charger_led.sh:system/bin/charger_led.sh
+
 # DRM HAL
 PRODUCT_PACKAGES += \
     android.hardware.drm@1.0-impl \
-    android.hardware.drm@1.0-service
+    android.hardware.drm@1.0-service \
+    android.hardware.drm@1.4-service.clearkey
 
 # Display Device Config
 PRODUCT_COPY_FILES += \
@@ -133,9 +143,12 @@ PRODUCT_PACKAGES += \
     android.hardware.graphics.allocator@3.0-impl \
     android.hardware.graphics.allocator@4.0-impl \
     android.hardware.graphics.allocator@2.0-service \
-    android.hardware.graphics.composer@2.2-service \
+    android.hardware.graphics.composer@2.1-service \
     android.hardware.graphics.mapper@2.0-impl \
     android.hardware.renderscript@1.0-impl
+
+PRODUCT_COPY_FILES += \
+    prebuilts/vndk/v30/arm/arch-arm-armv7-a-neon/shared/vndk-sp/libc++.so:system/vendor/lib/libc++.so
 
 # Shims
 PRODUCT_PACKAGES += \
@@ -145,7 +158,6 @@ PRODUCT_PACKAGES += \
     libshim_zw \
     libshims_ui \
     libs
-
 
 # HIDL
 PRODUCT_PACKAGES += \
@@ -181,13 +193,12 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.keymaster@4.1-service
 
+PRODUCT_COPY_FILES += \
+    prebuilts/vndk/v29/arm/arch-arm-armv7-a-neon/shared/vndk-core/libprotobuf-cpp-full.so:$(TARGET_COPY_OUT_VENDOR)/lib/libprotobuf-cpp-full-v29.so
+
 # Light
 PRODUCT_PACKAGES += \
     android.hardware.light@2.0-service.mocha
-
-# LiveDisplay
-#PRODUCT_PACKAGES += \
-#    vendor.mokee.livedisplay@2.0-service.nvidia
 
 # Media_omx config
 PRODUCT_PACKAGES += \
@@ -275,6 +286,7 @@ PRODUCT_PACKAGES += \
     nvphsd.conf
 
 # Power
+TARGET_POWERHAL_VARIANT := tegra
 PRODUCT_PACKAGES += \
     android.hardware.power@1.0-service.mocha
 
@@ -296,7 +308,6 @@ PRODUCT_PACKAGES += \
     init.tn8_common.rc \
     init.ussrd.rc \
     power.tn8.rc \
-    power.mocha.rc \
     ueventd.tn8.rc
 
 # Permissions
@@ -370,9 +381,8 @@ PRODUCT_PACKAGES += \
     wpa_supplicant \
     wpa_supplicant.conf
 
-# 补充webview所需的可选uses-library，解决校验冲突
+# webview uses-library
 PRODUCT_USES_LIBRARIES += androidx.window.extensions
 PRODUCT_OPTIONAL_USES_LIBRARIES += androidx.window.extensions
 PRODUCT_PACKAGES += androidx.window.extensions
 PRODUCT_BROKEN_VERIFY_USES_LIBRARIES := true
-

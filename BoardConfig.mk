@@ -17,9 +17,6 @@
 # Path
 LOCAL_PATH := device/xiaomi/mocha
 
-WITH_APEX := false
-PRODUCT_SUPPORTS_APEX := false
-
 # Audio
 USE_XML_AUDIO_POLICY_CONF:= 1
 USE_CUSTOM_AUDIO_POLICY  := 1
@@ -33,6 +30,7 @@ TARGET_CPU_ABI2 := armeabi
 TARGET_ARCH := arm
 TARGET_ARCH_VARIANT := armv7-a-neon
 TARGET_CPU_VARIANT := cortex-a15
+TARGET_CPU_SMP := true
 TARGET_NOT_USE_GZIP_RECOVERY_RAMDISK := true
 
 # Binder API
@@ -57,6 +55,23 @@ TARGET_BOOTANIMATION_HALF_RES := true
 #TARGET_HAS_LEGACY_CAMERA_HAL1 := true
 #TARGET_NEEDS_PLATFORM_TEXT_RELOCATIONS := true
 
+#TARGET_PROCESS_SDK_VERSION_OVERRIDE := \
+#    /system/bin/mediaserver=22 \
+#    /system/vendor/bin/hw/android.hardware.camera.provider@2.4-service=22
+
+# Dexpreopt
+ifeq ($(HOST_OS),linux)
+  ifneq ($(TARGET_BUILD_VARIANT),eng)
+    WITH_DEXPREOPT := true
+    WITH_DEXPREOPT_DEBUG_INFO := false
+    USE_DEX2OAT_DEBUG := false
+    WITH_DEXPREOPT_BOOT_IMG_AND_SYSTEM_SERVER_ONLY := false
+    PRODUCT_DEX_PREOPT_BOOT_COMPILER_FILTER := speed
+    PRODUCT_USE_COMPACT_DEX := true
+    WITH_DEX_PREOPT_GENERATE_APP_IMAGE := true
+  endif
+endif
+
 # ELF
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 BUILD_BROKEN_PREBUILT_ELF_FILES := true
@@ -77,6 +92,7 @@ TARGET_SCREEN_DENSITY := 320
 
 # Graphics
 USE_OPENGL_RENDERER := true
+TARGET_USES_GRALLOC1 := true
 NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
 BOARD_DISABLE_TRIPLE_BUFFERED_DISPLAY_SURFACES := true
 TARGET_DISABLE_POSTRENDER_CLEANUP := true
@@ -86,10 +102,6 @@ VSYNC_EVENT_PHASE_OFFSET_NS := 7500000
 # Gralloc
 TARGET_ADDITIONAL_GRALLOC_10_USAGE_BITS := 0x2000U | 0x02000000U
 
-# HAX for now
-#BUILD_BROKEN_USES_BUILD_COPY_HEADERS := true
-#BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
-#BUILD_BROKEN_DUP_RULES := true
 
 # HIDL Manifest
 DEVICE_MANIFEST_FILE := $(LOCAL_PATH)/manifest.xml
@@ -109,6 +121,9 @@ EXTENDED_FONT_FOOTPRINT := true
 TARGET_INIT_VENDOR_LIB := libinit_mocha
 TARGET_RECOVERY_DEVICE_MODULES := libinit_mocha
 
+# Vendor Init
+TARGET_LIBINIT_DEFINES_FILE := $(LOCAL_PATH)/init/init_mocha.cpp
+
 # Iptables
 TARGET_IPTABLES_BACKEND := legacy
 
@@ -121,7 +136,7 @@ BOARD_KERNEL_BASE := 0x10000000
 BOARD_RAMDISK_OFFSET := 0x02000000
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_KERNEL_TAGS_OFFSET := 0x00000100
-TARGET_KERNEL_SOURCE := kernel/xiaomi/mocha-R21.8
+TARGET_KERNEL_SOURCE := kernel/xiaomi/mocha
 TARGET_KERNEL_CONFIG := tegra12_android_defconfig
 BOARD_KERNEL_IMAGE_NAME := zImage
 BOARD_KERNEL_SEPARATED_DT := true
@@ -143,18 +158,27 @@ BOARD_FLASH_BLOCK_SIZE := 131072
 # LINEAGEHW
 JAVA_SOURCE_OVERLAYS := org.lineageos.hardware|$(LOCAL_PATH)/lineagehw|**/*.java
 
+# LightHAL
+TARGET_LIGHTHAL_VARIANT := tegra
+
 # Malloc
 MALLOC_SVELTE := true
+
+# OTA mocha
+TARGET_RELEASETOOLS_EXTENSIONS := device/xiaomi/mocha/releasetools
 
 # Memfd
 TARGET_HAS_MEMFD_BACKPORT := true
 
 # Offmode Charging
+HEALTHD_ENABLE_TRICOLOR_LED := true
+BOARD_CHARGER_ENABLE_SUSPEND := true
+BOARD_CHARGER_SHOW_PERCENTAGE := true
 BOARD_CHARGER_DISABLE_INIT_BLANK := true
-BACKLIGHT_PATH := "/sys/class/backlight/lcd-backlight/brightness"
-RED_LED_PATH := "/sys/class/leds/red/brightness"
-GREEN_LED_PATH := "/sys/class/leds/green/brightness"
-BLUE_LED_PATH := "/sys/class/leds/blue/brightness"
+BACKLIGHT_PATH := /sys/devices/platform/tegra12-i2c.0/i2c-0/0-002c/backlight/lcd-backlight/brightness
+RED_LED_PATH := /sys/class/leds/red/brightness
+GREEN_LED_PATH := /sys/class/leds/green/brightness
+BLUE_LED_PATH := /sys/class/leds/blue/brightness
 
 # Per-application sizes for shader cache
 MAX_EGL_CACHE_SIZE := 4194304
@@ -187,7 +211,10 @@ BOARD_SEPOLICY_DIRS += $(LOCAL_PATH)/sepolicy/mocha
 TARGET_LD_SHIM_LIBS := \
     /system/vendor/lib/hw/hwcomposer.tegra.so|libshim_camera.so \
     /system/vendor/lib/libnvcap_video.so|libshim_camera.so \
-    /system/vendor/lib/libnvgr.so|libshim_atomic.so
+    /system/vendor/lib/libnvgr.so|libshim_atomic.so \
+    /system/vendor/lib/libnvomxadaptor.so|libnvomxadaptor_shim.so \
+	/system/lib/libshim_zw.so|/system/lib/libbase.so \
+	/system/lib/libshim_zw.so|/system/lib/libc++.so
 
 # ThermalHAL
 TARGET_THERMALHAL_VARIANT := tegra
@@ -209,11 +236,9 @@ WIFI_DRIVER_FW_PATH_PARAM        := "/sys/module/bcmdhd/parameters/firmware_path
 #WIFI_DRIVER_MODULE_NAME          := "bcmdhd"
 WIFI_HIDL_UNIFIED_SUPPLICANT_SERVICE_RC_ENTRY := true
 
-# workaround for devices that uses old GPU blobs
-#BOARD_EGL_WORKAROUND_BUG_10194508 := true
                        
 # Zygote whitelist extra paths
-ZYGOTE_WHITELIST_PATH_EXTRA := \"/dev/nvhost-ctrl\",\"/dev/nvmap\",
+ZYGOTE_WHITELIST_PATH_EXTRA := \"/dev/nvhost-ctrl\",\"/dev/nvmap\"
 
 # Security patch level
 VENDOR_SECURITY_PATCH := 2025-04-05

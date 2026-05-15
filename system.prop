@@ -1,20 +1,17 @@
-# API
-ro.product.first_api_level=23
-
 # AptX
 persist.bt.enableAptXHD=true
 persist.service.btui.use_aptx=1
 persist.vendor.bt.a2dp_offload_cap=sbc-aptx-aptxtws-aptxhd-aac-ldac
 persist.vendor.btstack.a2dp_offload_cap=sbc-aptx-aptxtws-aptxhd-aac-ldacs
 
-# Apexd
-ro.apex.enabled=false
-
 # BPF
 ro.kernel.ebpf.supported=false
 
 # BT
 ro.boot.btmacaddr=03:16:6c:79:29:82
+
+# Charger
+persist.sys.chgdisabled=0
 
 # DIDIM
 persist.tegra.didim.enable=1
@@ -51,11 +48,12 @@ persist.lineage.nofool=true
 # LMKD options
 ro.lmk.low=1001
 ro.lmk.medium=800
+ro.lmk.high=400
 ro.lmk.critical=0
-ro.lmk.critical_upgrade=false
-ro.lmk.upgrade_pressure=100
-ro.lmk.downgrade_pressure=100
-ro.lmk.kill_heaviest_task=true
+ro.lmk.critical_upgrade=1
+ro.lmk.upgrade_pressure=80
+ro.lmk.downgrade_pressure=65
+ro.lmk.kill_heaviest_task=1
 ro.lmk.kill_timeout_ms=100
 ro.lmk.use_minfree_levels=true
 
@@ -103,3 +101,13 @@ persist.wlan.ti.calibrated=0
 
 # S Bringup
 persist.sys.binary_xml=false
+
+# ZRAM
+ro.zram.size=403m
+ro.zram.enabled=1
+ro.zram.compression_algorithm=lz4
+vm.swappiness=60
+vm.dirty_ratio=40
+vm.dirty_background_ratio=10
+vm.page-cluster=0
+
